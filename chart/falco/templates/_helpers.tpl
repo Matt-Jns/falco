@@ -35,11 +35,7 @@ Create chart name and version as used by the chart label.
 Create the name of the service account to use
 */}}
 {{- define "falco.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
     {{ default (include "falco.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
 {{- end -}}
 
 {{/*
@@ -62,15 +58,6 @@ Also, we can't use a single if because lazy evaluation is not an option
     {{- end -}}
 {{- else -}}
     {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Extract the unixSocket's directory path
-*/}}
-{{- define "falco.unixSocketDir" -}}
-{{- if .Values.falco.grpc.unixSocketPath -}}
-{{- .Values.falco.grpc.unixSocketPath | trimPrefix "unix://" | dir -}}
 {{- end -}}
 {{- end -}}
 

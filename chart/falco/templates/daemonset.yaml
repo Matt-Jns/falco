@@ -104,11 +104,7 @@ spec:
               readOnly: true
             - mountPath: /etc/falco
               name: config-volume
-            {{- if and .Values.falco.grpc.enabled .Values.falco.grpc.unixSocketPath }}
-            - mountPath: {{ include "falco.unixSocketDir" . }}
-              name: grpc-socket-dir
-            {{- end }}
-            {{- if or .Values.falco.webserver.sslEnabled (and .Values.falco.grpc.enabled (not .Values.falco.grpc.unixSocketPath)) }}
+            {{- if or .Values.falco.webserver.sslEnabled }}
             - mountPath: /etc/falco/certs
               name: certs-volume
               readOnly: true
@@ -155,12 +151,7 @@ spec:
                 path: rules.available/application_rules.yaml
               - key: aws_cloudtrail_rules.yaml
                 path: aws_cloudtrail_rules.yaml
-        {{- if and .Values.falco.grpc.enabled .Values.falco.grpc.unixSocketPath }}
-        - name: grpc-socket-dir
-          hostPath:
-            path: {{ include "falco.unixSocketDir" . }}
-        {{- end }}
-        {{- if or .Values.falco.webserver.sslEnabled (and .Values.falco.grpc.enabled (not .Values.falco.grpc.unixSocketPath)) }}
+        {{- if or .Values.falco.webserver.sslEnabled }}
         - name: certs-volume
           secret:
             {{- if .Values.certs.existingSecret }}

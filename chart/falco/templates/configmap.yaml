@@ -238,23 +238,19 @@ data:
     #   cert_chain: "/etc/falco/certs/server.crt"
     #   root_certs: "/etc/falco/certs/ca.crt"
     grpc:
-      enabled: {{ .Values.falco.grpc.enabled }}
-      threadiness: {{ .Values.falco.grpc.threadiness }}
-      {{- if .Values.falco.grpc.unixSocketPath }}
-      bind_address: "{{ .Values.falco.grpc.unixSocketPath }}"
-      {{ else }}
-      bind_address: "0.0.0.0:{{ .Values.falco.grpc.listenPort }}"
-      private_key: {{ .Values.falco.grpc.privateKey }}
-      cert_chain: {{ .Values.falco.grpc.certChain }}
-      root_certs: {{ .Values.falco.grpc.rootCerts }}
-      {{- end }}
+      enabled: false
+      threadiness: 0
+      bind_address: "unix:///var/run/falco/falco.sock"
+      private_key: "/etc/falco/certs/server.key"
+      cert_chain: "/etc/falco/certs/server.crt"
+      root_certs: "/etc/falco/certs/ca.crt"
 
     # gRPC output service.
     # By default it is off.
     # By enabling this all the output events will be kept in memory until you read them with a gRPC client.
     # Make sure to have a consumer for them or leave this disabled.
     grpc_output:
-      enabled: {{ .Values.falco.grpcOutput.enabled }}
+      enabled: false
 
     # Container orchestrator metadata fetching params
     metadata_download:
