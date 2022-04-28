@@ -30,6 +30,13 @@ spec:
         - name: {{ .Chart.Name }}
           image: {{ template "falco.image" . }}
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
           args:
             - /usr/bin/falco
             - --cri
