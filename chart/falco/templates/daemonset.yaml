@@ -21,10 +21,8 @@ spec:
         role: security
     spec:
       serviceAccountName: {{ template "falco.serviceAccountName" .}}
-      {{- if (and .Values.ebpf.enabled .Values.ebpf.settings.hostNetwork) }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
@@ -50,10 +48,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          {{- if .Values.ebpf.enabled }}
             - name: FALCO_BPF_PROBE
-              value: {{ .Values.ebpf.path }}
-          {{- end }}
+              value: ""
           {{- if .Values.falco.webserver.enabled }}
           livenessProbe:
             initialDelaySeconds: 60
