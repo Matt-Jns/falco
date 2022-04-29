@@ -11,7 +11,7 @@ metadata:
 spec:
   descriptor:
     type: Falco
-    version: "{{ .Values.drupal.image.tag }}"
+    version: "{{ .Values.falco.image.tag }}"
     description: |-
       Falco acts as a security camera detecting abnormal behavior, intrusions, and data theft in real time.
       # Support
