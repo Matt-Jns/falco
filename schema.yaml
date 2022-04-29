@@ -1,0 +1,69 @@
+x-google-marketplace:
+  schemaVersion: v2
+
+  applicationApiVersion: v1beta1
+
+  publishedVersion: "$TAG"
+  publishedVersionMetadata:
+    releaseNote: >-
+      Initial release.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  clusterConstraints:
+    resources:
+      - replicas: 1
+        requests:
+          cpu: 100m
+          memory: 100Mi
+
+  images:
+    '':
+      properties:
+        falco.image.repo:
+          type: REPO_WITH_REGISTRY
+        falco.image.tag:
+          type: TAG
+    apache-exporter:
+      properties:
+        apache.exporter.image:
+          type: FULL
+    prometheus-to-sd:
+      properties:
+        metrics.image:
+          type: FULL
+
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+  falco.serviceAccount.name:
+    type: string
+    title: The name of a ServiceAccount 
+    description: You can choose the name for a Service Account.
+  falco.priority:
+    type: string
+    title: Minimum rule priority level to load and run
+    description: You can choose the rule priority.
+    default: "debug"
+    enum:
+    - "emergency"
+    - "alert"
+    - "critical"
+    - "error"
+    - "warning"
+    - "notice"
+    - "informational"
+    - "debug"
+
+required:
+- name
+- namespace
+- falco.serviceAccount.name
+- falco.priority

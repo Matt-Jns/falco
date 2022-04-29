@@ -28,7 +28,7 @@ spec:
         key: node-role.kubernetes.io/master
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ template "falco.image" . }}
+          image: {{ .Values.falco.image.repo }}:{{ .Values.falco.image.tag }}
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -57,28 +57,20 @@ spec:
                   fieldPath: spec.nodeName
             - name: FALCO_BPF_PROBE
               value: ""
-          {{- if .Values.falco.webserver.enabled }}
           livenessProbe:
             initialDelaySeconds: 60
             timeoutSeconds: 5
             periodSeconds: 15
             httpGet:
-              path: {{ .Values.falco.webserver.k8sHealthzEndpoint }}
-              port: {{ .Values.falco.webserver.listenPort }}
-              {{- if .Values.falco.webserver.sslEnabled }}
-              scheme: HTTPS
-              {{- end }}
+              path: /healthz
+              port: 8765
           readinessProbe:
             initialDelaySeconds: 30
             timeoutSeconds: 5
             periodSeconds: 15
             httpGet:
-              path: {{ .Values.falco.webserver.k8sHealthzEndpoint }}
-              port: {{ .Values.falco.webserver.listenPort }}
-              {{- if .Values.falco.webserver.sslEnabled }}
-              scheme: HTTPS
-              {{- end }}
-          {{- end }}
+              path: /k8s-audit
+              port: 8765
           securityContext:
             privileged: true
           volumeMounts:
@@ -107,11 +99,6 @@ spec:
               readOnly: true
             - mountPath: /etc/falco
               name: config-volume
-            {{- if or .Values.falco.webserver.sslEnabled }}
-            - mountPath: /etc/falco/certs
-              name: certs-volume
-              readOnly: true
-            {{- end }}
       volumes:
         - name: docker-socket
           hostPath:
@@ -154,15 +141,6 @@ spec:
                 path: rules.available/application_rules.yaml
               - key: aws_cloudtrail_rules.yaml
                 path: aws_cloudtrail_rules.yaml
-        {{- if or .Values.falco.webserver.sslEnabled }}
-        - name: certs-volume
-          secret:
-            {{- if .Values.certs.existingSecret }}
-            secretName: {{ .Values.certs.existingSecret }}
-            {{- else }}
-            secretName: {{ template "falco.fullname" . }}-certs
-            {{- end }}
-        {{- end }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:

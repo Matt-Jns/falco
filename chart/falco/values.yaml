@@ -1,40 +1,12 @@
-# Default values for Falco.
-image:
-  registry: docker.io
-  repository: falcosecurity/falco
-  tag: 0.31.1
-  pullPolicy: IfNotPresent
-  pullSecrets: []
-
-serviceAccount:
-  name:
-
 falco:
+  image:
+    repo: null
+    tag: null
+
+  serviceAccount:
+    name: null
   # Minimum rule priority level to load and run. All rules having a
   # priority more severe than this level will be loaded/run.  Can be one
   # of "emergency", "alert", "critical", "error", "warning", "notice",
   # "informational", "debug".
   priority: debug
-
-  # Falco contains an embedded webserver that can be used to accept K8s
-  # Audit Events. These config options control the behavior of that
-  # webserver. (By default, the webserver is enabled).
-  webserver:
-    enabled: true
-    listenPort: 8765
-    nodePort: false
-    k8sAuditEndpoint: /k8s-audit
-    k8sHealthzEndpoint: /healthz
-    sslEnabled: false
-    sslCertificate: /etc/falco/certs/server.pem
-
-# certificates used by webserver and grpc server
-# paste certificate content or use helm with --set-file
-# or use existing secret containing key, crt, ca as well as pem bundle
-certs:
-  existingSecret: ""
-  server:
-    key: ""
-    crt: ""
-  ca:
-    crt: ""
