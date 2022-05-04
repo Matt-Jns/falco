@@ -20,7 +20,7 @@ spec:
         app: {{ template "falco.fullname" .}}
         role: security
     spec:
-      serviceAccountName: {{ template "falco.serviceAccountName" .}}
+      serviceAccountName: {{ .Values.falco.serviceAccount.name }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       tolerations:
@@ -69,7 +69,7 @@ spec:
             timeoutSeconds: 5
             periodSeconds: 15
             httpGet:
-              path: /k8s-audit
+              path: /healthz
               port: 8765
           securityContext:
             privileged: true
@@ -99,6 +99,32 @@ spec:
               readOnly: true
             - mountPath: /etc/falco
               name: config-volume
+            - mountPath: /var/run/falco
+              name: grpc-socket-dir
+        - name: {{ .Release.Name }}-exporter
+          image: {{ .Values.falco.exporter.image }}
+          imagePullPolicy: IfNotPresent
+          args:
+            - /usr/bin/falco-exporter
+            - --client-socket=unix:///var/run/falco/falco.sock
+            - --timeout=2m
+            - --listen-address=0.0.0.0:9376
+          ports:
+            - name: metrics
+              containerPort: 9376
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 19376
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 19376
+          volumeMounts:
+            - mountPath: /var/run/falco
+              name: grpc-socket-dir
+              readOnly: true
       volumes:
         - name: docker-socket
           hostPath:
@@ -141,6 +167,9 @@ spec:
                 path: rules.available/application_rules.yaml
               - key: aws_cloudtrail_rules.yaml
                 path: aws_cloudtrail_rules.yaml
+        - name: grpc-socket-dir
+          hostPath:
+            path: /var/run/falco
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:

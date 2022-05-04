@@ -1,0 +1,15 @@
+falco:
+  image:
+    repo: docker.io/falcosecurity/falco
+    tag: 0.31.1
+
+  serviceAccount:
+    name: falco-sa
+  # Minimum rule priority level to load and run. All rules having a
+  # priority more severe than this level will be loaded/run.  Can be one
+  # of "emergency", "alert", "critical", "error", "warning", "notice",
+  # "informational", "debug".
+  priority: debug
+
+  exporter:
+    image: "falcosecurity/falco-exporter:latest"
