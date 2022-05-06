@@ -2,11 +2,13 @@ falco:
   image:
     repo: null
     tag: null
-
   serviceAccount:
-    name: null
-  # Minimum rule priority level to load and run. All rules having a
-  # priority more severe than this level will be loaded/run.  Can be one
-  # of "emergency", "alert", "critical", "error", "warning", "notice",
-  # "informational", "debug".
+    name: falco-sa
   priority: debug
+  exporter:
+    image: null
+
+metrics:
+  image: null
+  exporter:
+    enabled: false

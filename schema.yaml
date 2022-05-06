@@ -25,14 +25,37 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         falco.image.tag:
           type: TAG
-    apache-exporter:
+    falco-exporter:
       properties:
-        apache.exporter.image:
+        falco.exporter.image:
           type: FULL
     prometheus-to-sd:
       properties:
         metrics.image:
           type: FULL
+
+  deployerServiceAccount:
+    description: Creates app resources, including Webhooks and ClusterRoleBindings.
+    roles:
+      - type: ClusterRole
+        rulesType: CUSTOM
+        rules:
+          - apiGroups:
+            - 'rbac.authorization.k8s.io'
+            resources:
+            - 'clusterroles'
+            - 'clusterrolebindings'
+            verbs:
+            - '*'
+          - apiGroups:
+            - ''
+            resources:
+            - 'namespaces'
+            verbs:
+            - 'create'
+            - 'list'
+            - 'update'
+            - 'patch'
 
 properties:
   name:
@@ -43,10 +66,6 @@ properties:
     type: string
     x-google-marketplace:
       type: NAMESPACE
-  falco.serviceAccount.name:
-    type: string
-    title: The name of a ServiceAccount 
-    description: You can choose the name for a Service Account.
   falco.priority:
     type: string
     title: Minimum rule priority level to load and run
@@ -65,5 +84,4 @@ properties:
 required:
 - name
 - namespace
-- falco.serviceAccount.name
 - falco.priority

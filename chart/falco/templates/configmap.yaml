@@ -4,10 +4,8 @@ metadata:
   name: {{ template "falco.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "falco.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: falco
 data:
   falco.yaml: |-
     # File(s) or Directories containing Falco rules, loaded at startup.

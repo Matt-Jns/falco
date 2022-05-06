@@ -8,15 +8,15 @@ APP_ID ?= $(CHART_NAME)
 
 TRACK ?= 0.31
 
-EXPORTER_TAG ?= exporter
-METRICS_EXPORTER_TAG ?= v0.5.1
+EXPORTER_TAG ?= v0.7.0
+METRICS_EXPORTER_TAG ?= v0.11.1-gke.1
 
 VERIFY_WAIT_TIMEOUT = 1800
 
-SOURCE_REGISTRY ?= marketplace.gcr.io/google
+SOURCE_REGISTRY ?= mattjcontainerregistry
 IMAGE_FALCO ?= $(SOURCE_REGISTRY)/falco:$(TRACK)
 IMAGE_FALCO_EXPORTER ?= $(SOURCE_REGISTRY)/falco-exporter:$(EXPORTER_TAG)
-IMAGE_PROMETHEUS_TO_SD ?= k8s.gcr.io/prometheus-to-sd:$(METRICS_EXPORTER_TAG)
+IMAGE_PROMETHEUS_TO_SD ?= gke.gcr.io/prometheus-to-sd:$(METRICS_EXPORTER_TAG)
 
 
 # Main image
@@ -26,7 +26,6 @@ image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_FALCO))
 ADDITIONAL_IMAGES := falco-exporter prometheus-to-sd
 
 # Additional images variable names should correspond with ADDITIONAL_IMAGES list
-image-falco := $(call get_sha256,$(IMAGE_FALCO))
 image-falco-exporter := $(call get_sha256,$(IMAGE_FALCO_EXPORTER))
 image-prometheus-to-sd := $(call get_sha256,$(IMAGE_PROMETHEUS_TO_SD))
 
@@ -38,6 +37,10 @@ NAME ?= $(APP_ID)-1
 
 # Additional variables
 
+ifdef PRIORITY
+  PRIORITY_FIELD = , "falco.priority": "$(PRIORITY)"
+endif
+
 ifdef METRICS_EXPORTER_ENABLED
   METRICS_EXPORTER_ENABLED_FIELD = , "metrics.exporter.enabled": $(METRICS_EXPORTER_ENABLED)
 endif
@@ -45,6 +48,7 @@ endif
 APP_PARAMETERS ?= { \
   "name": "$(NAME)", \
   "namespace": "$(NAMESPACE)" \
+  $(PRIORITY_FIELD) \
   $(METRICS_EXPORTER_ENABLED_FIELD) \
 }
 

@@ -3,10 +3,8 @@ apiVersion: {{ template "rbac.apiVersion" . }}
 metadata:
   name: {{ template "falco.fullname" .}}
   labels:
-    app: {{ template "falco.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: falco
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.falco.serviceAccount.name }}
