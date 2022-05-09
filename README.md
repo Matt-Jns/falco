@@ -22,7 +22,7 @@ The application offers the Falco application deployed as DaemonSet to work on ev
 
 The eBPF support for Falco is enabled by default instead of `falco-probe` kernel module (see: [Third Party Integrations](https://falco.org/docs/getting-started/third-party/production/#gke))
 
-Falco configuration failes locates in the `/etc/falco` are automatically generated in the application
+Falco configuration files located in the `/etc/falco` are automatically generated in the application
 through a Kubernetes ConfigMap.
 
 # Installation
