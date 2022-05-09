@@ -54,7 +54,7 @@ spec:
 
       To monitor security events detected by Falco run:
       ```
-      kubectl logs -l app.kubernetes.io/component=falco
+      kubectl logs -l app.kubernetes.io/component=falco -c falco
       ```    
       
   info:

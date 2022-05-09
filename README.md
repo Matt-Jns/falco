@@ -20,7 +20,7 @@ The application offers the Falco application deployed as DaemonSet to work on ev
 
 ![Architecture diagram](resources/falco-k8s-app-architecture.png)
 
-The eBPF support for Falco is enabled by default instead of `falco-probe` kernel module (see: [Third Party Integrations](https://falco.org/docs/getting-started/third-party/production/#gke))
+The eBPF support for Falco is enabled by default instead of `falco-probe` kernel module (see: [Third Party Integrations](https://falco.org/docs/getting-started/third-party/production/#gke)).
 
 Falco configuration files located in the `/etc/falco` are automatically generated in the application
 through a Kubernetes ConfigMap.
@@ -157,12 +157,12 @@ Configure the container images:
 ```shell
 export IMAGE_FALCO="marketplace.gcr.io/google/falco"
 export IMAGE_FALCO_EXPORTER="marketplace.gcr.io/google/falco/falco-exporter:${TAG}"
-export IMAGE_PROMETHEUS_TO_SD="marketplace.gcr.io/google/falco/prometheus-to-sd:${TAG}"
+export IMAGE_METRICS_EXPORTER="marketplace.gcr.io/google/falco/prometheus-to-sd:${TAG}"
 ```
 
 Configure minimum rule priority level to load and run:
 
-Every Falco rule has a priority which indicates how serious a violation of the rule is. The priority is included in the message/JSON output/etc. Here are the available priorities. Can be one of "emergency", "alert", "critical", "error", "warning", "notice", "info", "debug". For more information see: [Falco Rule Priorities](https://falco.org/docs/rules/#rule-priorities)
+Every Falco rule has a priority which indicates how serious a violation of the rule is. The priority is included in the message/JSON output/etc. Here are the available priorities. Can be one of `emergency`, `alert`, `critical`, `error`, `warning`, `notice`, `informational`, `debug`. For more information see: [Falco Rule Priorities](https://falco.org/docs/rules/#rule-priorities).
 
 ```shell
 export FALCO_PRIORITY="debug"
@@ -213,7 +213,7 @@ To view your app, open the URL in your browser.
 
 # Access Falco
 
-The Falco application is deployed as DaemonSet to work on every node on Kubernetes cluster.
+The Falco application is deployed as a DaemonSet to work on every node on Kubernetes cluster.
 To monitor security events detected by Falco run:
 
 ```shell
@@ -232,7 +232,7 @@ You can access the metrics at `[EXPORTER_SVC_URL]:9376/metrics`, where
 [http://localhost:8080/metrics](http://localhost:8080/metrics) endpoint using port forwarding as below:
 
 ```shell
-kubectl port-forward svc/falco-1-exporter-svc 8080:9376
+kubectl port-forward svc/${APP_INSTANCE_NAME}-exporter-svc 8080:9376
 ```
 
 ## Configuring Prometheus to collect the metrics
@@ -272,14 +272,14 @@ The Falco DaemonSet is configured to roll out updates automatically. Start
 the update by patching the DaemonSet with a new image reference:
 
 ```shell
-kubectl set image daemonset ${APP_INSTANCE_NAME}-falco --namespace ${NAMESPACE} \
+kubectl set image daemonset ${APP_INSTANCE_NAME} --namespace ${NAMESPACE} \
   "falco=[NEW_IMAGE_REFERENCE]"
 ```
 
 Where `[NEW_IMAGE_REFERENCE]` is the Docker image reference of the new image
 that you want to use.
 
-To check the status of Pods in the StatefulSet, and the progress of the new
+To check the status of Pods in the DaemonSet, and the progress of the new
 image, run the following command:
 
 ```shell
