@@ -1,1 +1,1 @@
-{ name: falco-1, namespace: default   }
+{ name: falco-1, namespace: default  , metrics.exporter.enabled: true }

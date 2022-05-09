@@ -4,7 +4,7 @@ falco:
     tag: null
   serviceAccount:
     name: falco-sa
-  priority: debug
+  priority: null
   exporter:
     image: null
 

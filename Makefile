@@ -37,8 +37,8 @@ NAME ?= $(APP_ID)-1
 
 # Additional variables
 
-ifdef PRIORITY
-  PRIORITY_FIELD = , "falco.priority": "$(PRIORITY)"
+ifdef FALCO_PRIORITY
+  FALCO_PRIORITY_FIELD = , "falco.priority": "$(FALCO_PRIORITY)"
 endif
 
 ifdef METRICS_EXPORTER_ENABLED
@@ -48,7 +48,7 @@ endif
 APP_PARAMETERS ?= { \
   "name": "$(NAME)", \
   "namespace": "$(NAMESPACE)" \
-  $(PRIORITY_FIELD) \
+  $(FALCO_PRIORITY_FIELD) \
   $(METRICS_EXPORTER_ENABLED_FIELD) \
 }
 
