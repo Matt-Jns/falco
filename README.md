@@ -217,7 +217,7 @@ The Falco application is deployed as DaemonSet to work on every node on Kubernet
 To monitor security events detected by Falco run:
 
 ```shell
-    kubectl logs -l app.kubernetes.io/component=falco
+kubectl logs -l app.kubernetes.io/component=falco
 ```
 
 # Application metrics
@@ -232,7 +232,7 @@ You can access the metrics at `[EXPORTER_SVC_URL]:9376/metrics`, where
 [http://localhost:8080/metrics](http://localhost:8080/metrics) endpoint using port forwarding as below:
 
 ```shell
-    kubectl port-forward svc/falco-1-exporter-svc 8080:9376
+kubectl port-forward svc/falco-1-exporter-svc 8080:9376
 ```
 
 ## Configuring Prometheus to collect the metrics
